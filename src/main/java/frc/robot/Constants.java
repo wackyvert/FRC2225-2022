@@ -17,6 +17,7 @@ public final class Constants {
     public static int FrontRightCAN_ID = 1;
     public static int BackLeftCAN_ID = 2;
     public static int BackRightCAN_ID = 3;
+    public static int Driver1ID = 0;
 }
 
 
