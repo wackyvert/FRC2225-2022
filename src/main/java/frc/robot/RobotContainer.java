@@ -4,12 +4,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.Drivetrain;
 
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.*;
+import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,6 +27,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -36,7 +39,23 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    XboxController controller1 = new XboxController(0);
+    Joystick controller1 = new Joystick(Constants.Driver1ID);
+
+    final JoystickButton aButton1 = new JoystickButton(controller1, 1);
+    final JoystickButton bButton1 = new JoystickButton(controller1, 2);
+    final JoystickButton xButton1 = new JoystickButton(controller1, 3);
+    final JoystickButton yButton1 = new JoystickButton(controller1, 4);
+    final JoystickButton rightBumperButton = new JoystickButton(controller1, 5);
+    final JoystickButton leftBumperButton = new JoystickButton(controller1, 6);
+    final JoystickButton squareButton = new JoystickButton(controller1, 7);
+    final JoystickButton startButton = new JoystickButton(controller1, 8);
+    final JoystickButton rightJoystickButton = new JoystickButton(controller1, 9);
+    final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
+    aButton1.whenPressed(new PID(), true);
+    bButton1.whenPressed(new stopEverything());
+    yButton1.whileHeld(new AlignForwardAndSide());
+
+
   }
 
   /**
