@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
@@ -28,14 +29,14 @@ public class PID extends CommandBase {
     leftEncoder.reset();
     pidController = new PIDController(0.2, 0, 0);
     leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute(
-  
-  ) {
+  public void execute() {
     RobotContainer.mDrivetrain.setVoltage(pidController.calculate(leftEncoder.getDistance(), target), -pidController.calculate(leftEncoder.getDistance(), target));
+    SmartDashboard.putNumber("Encoder", leftEncoder.getDistance());
   }
 
   // Called once the command ends or is interrupted.
