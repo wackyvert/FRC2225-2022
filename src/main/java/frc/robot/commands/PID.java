@@ -16,13 +16,18 @@ public class PID extends CommandBase {
     
     // Use addRequirements() here to declare subsystem dependencies.
   }
-  double target = 50;
+  double target = 5;
   Encoder leftEncoder = new Encoder(0,1);
   Encoder rightEncoder = new Encoder(2,3);
+  double whd = 6;
+  double cpr = 360;
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pidController = new PIDController(0.02, 0, 0);
+    leftEncoder.reset();
+    pidController = new PIDController(0.2, 0, 0);
+    leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

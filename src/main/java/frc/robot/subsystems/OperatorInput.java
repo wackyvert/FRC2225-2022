@@ -6,20 +6,17 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.ScaleInputs;
 
-import java.util.ArrayList;
 
 public class OperatorInput extends SubsystemBase {
   
-  private static XboxController controller1 = new XboxController(0);
-  private static Joystick sidewinder = new Joystick(1);
+  private static XboxController controller1 = new XboxController(Constants.Driver1ID);
+  private static Joystick sidewinder = new Joystick(Constants.Driver1ID);
   /**
    * Creates a new OI.
    */

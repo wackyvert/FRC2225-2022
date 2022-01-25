@@ -8,9 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.OperatorInput;
 public class Drivetrain extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   
@@ -35,6 +33,8 @@ public class Drivetrain extends SubsystemBase {
       backRight.follow(frontRight);
     }
     public void setVoltage(double left, double right){
+      frontLeft.setNeutralMode(NeutralMode.Coast);
+      frontRight.setNeutralMode(NeutralMode.Coast);
       backLeft.follow(frontLeft);
       backRight.follow(frontRight);
       frontLeft.set(ControlMode.PercentOutput, left);
