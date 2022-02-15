@@ -20,7 +20,7 @@ public class PID extends CommandBase {
   double target = 5;
   Encoder leftEncoder = new Encoder(0,1);
   Encoder rightEncoder = new Encoder(2,3);
-  double whd = 6;
+  double whd = 6/12;
   double cpr = 360;
   
   // Called when the command is initially scheduled.
