@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -35,7 +37,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static final Drivetrain mDrivetrain = new Drivetrain();
-
+  public static final Shooter mShooter = new Shooter();
+  public static final Intake mIntake = new Intake();
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -64,9 +67,10 @@ public class RobotContainer {
     final JoystickButton startButton = new JoystickButton(controller1, 8);
     final JoystickButton rightJoystickButton = new JoystickButton(controller1, 9);
     final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
-    aButton1.whenPressed(new PID(), true);
+    aButton1.whileHeld(new ShootBall(), true);
     bButton1.whenPressed(new stopEverything());
     yButton1.whileHeld(new AlignForwardAndSide());
+    xButton1.whileHeld(new frc.robot.commands.Intake());
 
 
   }
@@ -82,7 +86,7 @@ public class RobotContainer {
      new DifferentialDriveVoltageConstraint(
          new SimpleMotorFeedforward(
              Constants.ksVolts,
-             Constants.ksVoltSecondPerMeter,
+             Constants.kvVoltSecondsPerMeter,
              Constants.kaVoltSecondsSquaredPerMeter),
          Constants.kDriveKinematics,
          10);
@@ -90,8 +94,8 @@ public class RobotContainer {
  // Create config for trajectory
  TrajectoryConfig config =
      new TrajectoryConfig(
-             Constants.kMaxSpeedMeters,
-             Constants.kMaxAccelMeters)
+             Constants.kMaxSpeedMetersPerSecond,
+             Constants.kMaxAccelerationMetersPerSecondSquared)
          // Add kinematics to ensure max speed is actually obeyed
          .setKinematics(Constants.kDriveKinematics)
          // Apply the voltage constraint
@@ -116,10 +120,10 @@ public class RobotContainer {
          new RamseteController(),
          new SimpleMotorFeedforward(
              Constants.ksVolts,
-             Constants.ksVoltSecondPerMeter,
+             Constants.kvVoltSecondsPerMeter,
              Constants.kaVoltSecondsSquaredPerMeter),
          Constants.kDriveKinematics,
-         mDrivetrain::getWheelSpeed,
+         mDrivetrain::getWheelSpeeds,
          new PIDController(.2, 0, 0),
          new PIDController(.2, 0, 0),
          // RamseteCommand passes volts to the callback

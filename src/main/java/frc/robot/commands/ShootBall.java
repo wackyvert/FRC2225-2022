@@ -5,29 +5,40 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.RobotContainer;
 
-public class ArcadeDrive extends CommandBase {
-  
-  /** Creates a new ArcadeDrive. */
-  public ArcadeDrive() {
+public class ShootBall extends CommandBase {
+  /** Creates a new ShootBall. */
+  public ShootBall(boolean high) {
+    addRequirements(RobotContainer.mShooter);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.mDrivetrain);
-    
+    this.high=high;
   }
-
+  boolean high;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {RobotContainer.mDrivetrain.arcadeDrive();}
+  public void execute() {
+    if(high){
+    RobotContainer.mShooter.shootBall(9000);
+    }
+    else
+    {RobotContainer.mShooter.shootBall(7600);}
     
+  }
+
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.mShooter.end();
+  }
 
-  
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }
