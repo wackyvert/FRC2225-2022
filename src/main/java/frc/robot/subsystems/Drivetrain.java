@@ -11,12 +11,14 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drivetrain extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  
   TalonSRX frontLeft = new TalonSRX(Constants.FrontLeftCAN_ID);
     TalonSRX frontRight = new TalonSRX (Constants.FrontRightCAN_ID);
     TalonSRX backLeft = new TalonSRX (Constants.BackLeftCAN_ID);
     TalonSRX backRight = new TalonSRX(Constants.BackRightCAN_ID);
+  
     public Drivetrain() {
+      
+      
     }
     public void stop (){
       frontLeft.set(ControlMode.PercentOutput, 0);
@@ -41,12 +43,13 @@ public class Drivetrain extends SubsystemBase {
       frontRight.set(ControlMode.PercentOutput, right);
     }
   public void arcadeDrive (){
+    
     frontLeft.setNeutralMode(NeutralMode.Coast);
     frontRight.setNeutralMode(NeutralMode.Coast);
     frontLeft.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
-    backLeft.follow(frontLeft);
-    frontRight.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()-OperatorInput.getTurnVal());
-    backRight.follow(frontRight);
+    backLeft.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
+    frontRight.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
+    backRight.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
   }
   @Override
   public void periodic() {
