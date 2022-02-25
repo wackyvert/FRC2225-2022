@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
     public static int FrontLeftCAN_ID = 3;
     public static int FrontRightCAN_ID = 12;
+    public static int feederID = 13;
     public static int BackLeftCAN_ID = 2;
     public static int BackRightCAN_ID = 1;
     public static int shooterCanID = 0;

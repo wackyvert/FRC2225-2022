@@ -23,6 +23,8 @@ public class stopEverything extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.mDrivetrain.stop();
+    RobotContainer.mShooter.end();
+    RobotContainer.mIntake.end();
   }
 
   // Called once the command ends or is interrupted.

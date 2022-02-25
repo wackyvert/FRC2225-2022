@@ -15,10 +15,13 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
-  public Shooter() {}
+  public Shooter() {
+    shooter.setInverted(true);
+    feeder.setInverted(true);
+  }
   BangBangController rpmController = new BangBangController();
-  TalonFX shooter = new TalonFX(0);
-  VictorSPX feeder = new VictorSPX(13);
+  TalonFX shooter = new TalonFX(Constants.shooterCanID);
+  VictorSPX feeder = new VictorSPX(Constants.feederID);
   public void end(){
     shooter.set(ControlMode.PercentOutput, 0);
     feeder.set(ControlMode.PercentOutput, 0);
@@ -35,7 +38,7 @@ public class Shooter extends SubsystemBase {
       feedBall();
     }
   }
-  public void feedBall(){
-    feeder.set(ControlMode.PercentOutput, -.8);
+    public void feedBall(){
+    feeder.set(ControlMode.PercentOutput, .8);
   }
 }

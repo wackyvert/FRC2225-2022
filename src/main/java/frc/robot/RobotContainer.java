@@ -67,7 +67,7 @@ public class RobotContainer {
     final JoystickButton startButton = new JoystickButton(controller1, 8);
     final JoystickButton rightJoystickButton = new JoystickButton(controller1, 9);
     final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
-    aButton1.whileHeld(new ShootBall(), true);
+    aButton1.whileHeld(new ShootBall(true), true);
     bButton1.whenPressed(new stopEverything());
     yButton1.whileHeld(new AlignForwardAndSide());
     xButton1.whileHeld(new frc.robot.commands.Intake());

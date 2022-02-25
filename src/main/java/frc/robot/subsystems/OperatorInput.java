@@ -29,7 +29,7 @@ public class OperatorInput extends SubsystemBase {
   }
   //gets the turtn val to drive the robot at (based on the right joystick on the primary controller)
   public static double getTurnVal() {
-    return -ScaleInputs.scaleInputs(controller1.getRawAxis(0), 0.2, 0.1, 2);
+    return -ScaleInputs.scaleInputs(controller1.getRawAxis(0), 0.1, 0.1, 2);
   }
   public static double calculateLeftSpeed() {
     double left = getTurnVal()-getSpeedVal(); //left is speed minus turn for arcade drive
