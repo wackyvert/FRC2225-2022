@@ -18,12 +18,16 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     shooter.setInverted(true);
     feeder.setInverted(true);
+    
   }
   BangBangController rpmController = new BangBangController();
   TalonFX shooter = new TalonFX(Constants.shooterCanID);
   VictorSPX feeder = new VictorSPX(Constants.feederID);
   public void end(){
     shooter.set(ControlMode.PercentOutput, 0);
+    
+  }
+  public void endFeed(){
     feeder.set(ControlMode.PercentOutput, 0);
   }
   double ShooterRPM;
@@ -34,11 +38,13 @@ public class Shooter extends SubsystemBase {
   }
   public void shootBall(int rpm){
     shooter.set(ControlMode.PercentOutput, rpmController.calculate(ShooterRPM, rpm));
-    if(ShooterRPM>=rpm-100&&ShooterRPM<=rpm+100){
+    if(rpmController.atSetpoint()){
       feedBall();
     }
+    
+    
   }
     public void feedBall(){
-    feeder.set(ControlMode.PercentOutput, .8);
+    feeder.set(ControlMode.PercentOutput, .7);
   }
 }

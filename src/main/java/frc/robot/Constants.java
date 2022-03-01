@@ -23,10 +23,10 @@ public final class Constants {
     public static int shooterCanID = 0;
     public static int intakeCanID = 8;
     public static int Driver1ID = 0;
-    public static final double ksVolts = 0.22;
-    public static final double kvVoltSecondsPerMeter = 1.98;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.2;
-    public static final double kPDriveVel = 8.5;
+    public static final double ksVolts = 0.7246;
+    public static final double kvVoltSecondsPerMeter = 1.6275;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.16782;
+    public static final double kPDriveVel = 2.0844;
     public static final double kTrackwidthMeters = 0.69;
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
