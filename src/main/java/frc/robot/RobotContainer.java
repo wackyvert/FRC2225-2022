@@ -67,11 +67,10 @@ public class RobotContainer {
     final JoystickButton startButton = new JoystickButton(controller1, 8);
     final JoystickButton rightJoystickButton = new JoystickButton(controller1, 9);
     final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
-    aButton1.whileHeld(new ShootBall(true));
-    bButton1.whenPressed(new ShootBall(true));
+    aButton1.whileHeld(new ShootBall(true), true);
+    bButton1.whenPressed(new stopEverything());
     yButton1.whileHeld(new AlignForwardAndSide());
     xButton1.whileHeld(new frc.robot.commands.Intake());
-    rightBumperButton.whileHeld(new feed());
 
 
   }
@@ -81,7 +80,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand(Trajectory trajectory) {
      // Create a voltage constraint to ensure we don't accelerate too fast
      var autoVoltageConstraint =
      new DifferentialDriveVoltageConstraint(
@@ -90,7 +89,7 @@ public class RobotContainer {
              Constants.kvVoltSecondsPerMeter,
              Constants.kaVoltSecondsSquaredPerMeter),
          Constants.kDriveKinematics,
-         6);
+         10);
 
  // Create config for trajectory
  TrajectoryConfig config =
@@ -103,20 +102,11 @@ public class RobotContainer {
          .addConstraint(autoVoltageConstraint);
 
  // An example trajectory to follow.  All units in meters.
- Trajectory exampleTrajectory =
-     TrajectoryGenerator.generateTrajectory(
-         // Start at the origin facing the +X direction
-         new Pose2d(0, 0, new Rotation2d(0)),
-         // Pass through these two interior waypoints, making an 's' curve path
-         List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-         // End 3 meters straight ahead of where we started, facing forward
-         new Pose2d(3, 0, new Rotation2d(0)),
-         // Pass config
-         config);
+
 
  RamseteCommand ramseteCommand =
      new RamseteCommand(
-         exampleTrajectory,
+         trajectory,
          mDrivetrain::getPose,
          new RamseteController(),
          new SimpleMotorFeedforward(
@@ -132,10 +122,11 @@ public class RobotContainer {
          mDrivetrain);
 
  // Reset odometry to the starting pose of the trajectory.
- mDrivetrain.resetOdometry(exampleTrajectory.getInitialPose());
+ mDrivetrain.resetOdometry(trajectory.getInitialPose());
 
  // Run path following command, then stop at the end.
  return ramseteCommand.andThen(() -> mDrivetrain.setVoltage(0, 0));
   }
 }
+
 
