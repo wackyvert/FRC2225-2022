@@ -6,9 +6,16 @@ package frc.robot;
 
 
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CameraServerCvJNI;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +41,8 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
  //public static Encoder leftEncoder = new Encoder(0, 1);
+ String trajectoryJSON = "paths/3Ball.wpilib.json";
+public Trajectory trajectory = new Trajectory();
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
@@ -43,10 +52,18 @@ public class Robot extends TimedRobot {
     CameraServer.startAutomaticCapture();
     double whd = 6;
     double cpr = 360;
+    try {
+      
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+   } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+   }
+}
    // leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
 
 
-  }
+  
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
@@ -76,7 +93,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
    
-   m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+   m_autonomousCommand = m_robotContainer.getAutonomousCommand(trajectory);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
