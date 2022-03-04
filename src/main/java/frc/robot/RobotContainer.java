@@ -67,10 +67,11 @@ public class RobotContainer {
     final JoystickButton startButton = new JoystickButton(controller1, 8);
     final JoystickButton rightJoystickButton = new JoystickButton(controller1, 9);
     final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
-    aButton1.whileHeld(new ShootBall(true), true);
-    bButton1.whenPressed(new stopEverything());
+    aButton1.whileHeld(new ShootBall(true));
+    bButton1.whenPressed(new ShootBall(true));
     yButton1.whileHeld(new AlignForwardAndSide());
     xButton1.whileHeld(new frc.robot.commands.Intake());
+    rightBumperButton.whileHeld(new feed());
 
 
   }
@@ -89,7 +90,7 @@ public class RobotContainer {
              Constants.kvVoltSecondsPerMeter,
              Constants.kaVoltSecondsSquaredPerMeter),
          Constants.kDriveKinematics,
-         10);
+         6);
 
  // Create config for trajectory
  TrajectoryConfig config =

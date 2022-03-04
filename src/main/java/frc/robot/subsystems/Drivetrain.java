@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drivetrain extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -25,7 +26,8 @@ public class Drivetrain extends SubsystemBase {
     Encoder rightEncoder = new Encoder(2,3);
   double whd = .1524;
     double cpr = 360;
-    private final Gyro m_gyro = new ADXRS450_Gyro();
+    private final ADXRS450_Gyro
+     m_gyro = new ADXRS450_Gyro();
     public Drivetrain() {
       leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
       rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
@@ -65,9 +67,9 @@ public class Drivetrain extends SubsystemBase {
       right=right/12;
       frontLeft.setNeutralMode(NeutralMode.Coast);
       frontRight.setNeutralMode(NeutralMode.Coast);
-      backLeft.follow(frontLeft);
-      backRight.follow(frontRight);
-      frontLeft.set(ControlMode.PercentOutput, left);
+     backLeft.set(ControlMode.PercentOutput, left);
+     backRight.set(ControlMode.PercentOutput, right);
+     frontLeft.set(ControlMode.PercentOutput, left);
       frontRight.set(ControlMode.PercentOutput, right);
     }
   public void arcadeDrive (){
@@ -81,6 +83,9 @@ public class Drivetrain extends SubsystemBase {
   }
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("gyro", m_gyro.getAngle());
+    
+    
     m_odometry.update(
       m_gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
 }

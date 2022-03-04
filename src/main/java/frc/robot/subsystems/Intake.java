@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase {
   VictorSPX intake = new VictorSPX(Constants.intakeCanID);
   public Intake() {}
   public void spinIntake(){
-    intake.set(ControlMode.PercentOutput, .7);
+    intake.set(ControlMode.PercentOutput, .85);
   }
   public void end(){
     intake.set(ControlMode.PercentOutput, 0);

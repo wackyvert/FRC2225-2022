@@ -7,14 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class ShootBall extends CommandBase {
-  /** Creates a new ShootBall. */
-  public ShootBall(boolean high) {
-    addRequirements(RobotContainer.mShooter);
+public class feed extends CommandBase {
+  /** Creates a new feed. */
+  public feed() {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.high=high;
   }
-  boolean high;
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -22,18 +20,13 @@ public class ShootBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(high){
-    RobotContainer.mShooter.shootBall(9500);
-    }
-    else
-    {RobotContainer.mShooter.shootBall(7600);}
-    
+    RobotContainer.mShooter.feedBall();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.mShooter.end();
+    RobotContainer.mShooter.endFeed();
   }
 
   // Returns true when the command should end.

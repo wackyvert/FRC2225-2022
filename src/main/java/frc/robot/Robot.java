@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {new ShootBall(true).schedule(); new feed().schedule();}
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
