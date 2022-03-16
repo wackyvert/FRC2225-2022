@@ -9,11 +9,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drivetrain extends SubsystemBase {
@@ -28,7 +30,9 @@ public class Drivetrain extends SubsystemBase {
     double cpr = 360;
     private final ADXRS450_Gyro
      m_gyro = new ADXRS450_Gyro();
+     private final Field2d m_field = new Field2d();
     public Drivetrain() {
+      SmartDashboard.putData("Field", m_field);
       leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
       rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
       m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
@@ -61,6 +65,9 @@ public class Drivetrain extends SubsystemBase {
     public void resetEncoders() {
       leftEncoder.reset();
       rightEncoder.reset();
+      
+     
+
     }
     public void setVoltage(double left, double right){
       left=left/12;
@@ -83,6 +90,7 @@ public class Drivetrain extends SubsystemBase {
   }
   @Override
   public void periodic() {
+    m_field.setRobotPose(m_odometry.getPoseMeters());
     SmartDashboard.putNumber("gyro", m_gyro.getAngle());
     
     

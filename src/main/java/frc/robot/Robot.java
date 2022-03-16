@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -49,6 +50,10 @@ public Trajectory trajectory = new Trajectory();
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     CommandScheduler.getInstance().setDefaultCommand(RobotContainer.mDrivetrain, new ArcadeDrive());
+    Field2d m_field = new Field2d();
+    SmartDashboard.putData(m_field);
+
+    
     CameraServer.startAutomaticCapture();
     double whd = 6;
     double cpr = 360;
@@ -59,8 +64,10 @@ public Trajectory trajectory = new Trajectory();
    } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
    }
+   // Push the trajectory to Field2d.
+   m_field.getObject("traj").setTrajectory(trajectory);
 }
-   // leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
+   
 
 
   
