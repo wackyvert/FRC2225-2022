@@ -46,17 +46,12 @@ public class Robot extends TimedRobot {
 public Trajectory trajectory = new Trajectory();
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
     CommandScheduler.getInstance().setDefaultCommand(RobotContainer.mDrivetrain, new ArcadeDrive());
     Field2d m_field = new Field2d();
     SmartDashboard.putData(m_field);
-
+    
     
     CameraServer.startAutomaticCapture();
-    double whd = 6;
-    double cpr = 360;
     try {
       
     Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
@@ -64,6 +59,7 @@ public Trajectory trajectory = new Trajectory();
    } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
    }
+   m_robotContainer = new RobotContainer();
    // Push the trajectory to Field2d.
    m_field.getObject("traj").setTrajectory(trajectory);
 }
@@ -99,7 +95,8 @@ public Trajectory trajectory = new Trajectory();
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-   
+    // Reset odometry to the starting pose of the trajectory.
+   RobotContainer.mDrivetrain.resetOdometry(trajectory.getInitialPose());
    m_autonomousCommand = m_robotContainer.getAutonomousCommand(trajectory);
 
     // schedule the autonomous command (example)

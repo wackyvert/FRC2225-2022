@@ -81,51 +81,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand(Trajectory trajectory) {
-     // Create a voltage constraint to ensure we don't accelerate too fast
-     var autoVoltageConstraint =
-     new DifferentialDriveVoltageConstraint(
-         new SimpleMotorFeedforward(
-             Constants.ksVolts,
-             Constants.kvVoltSecondsPerMeter,
-             Constants.kaVoltSecondsSquaredPerMeter),
-         Constants.kDriveKinematics,
-         10);
-
- // Create config for trajectory
- TrajectoryConfig config =
-     new TrajectoryConfig(
-             Constants.kMaxSpeedMetersPerSecond,
-             Constants.kMaxAccelerationMetersPerSecondSquared)
-         // Add kinematics to ensure max speed is actually obeyed
-         .setKinematics(Constants.kDriveKinematics)
-         // Apply the voltage constraint
-         .addConstraint(autoVoltageConstraint);
-
- // An example trajectory to follow.  All units in meters.
-
-
- RamseteCommand ramseteCommand =
-     new RamseteCommand(
-         trajectory,
-         mDrivetrain::getPose,
-         new RamseteController(),
-         new SimpleMotorFeedforward(
-             Constants.ksVolts,
-             Constants.kvVoltSecondsPerMeter,
-             Constants.kaVoltSecondsSquaredPerMeter),
-         Constants.kDriveKinematics,
-         mDrivetrain::getWheelSpeeds,
-         new PIDController(.2, 0, 0),
-         new PIDController(.2, 0, 0),
-         // RamseteCommand passes volts to the callback
-         mDrivetrain::setVoltage,
-         mDrivetrain);
-
- // Reset odometry to the starting pose of the trajectory.
- mDrivetrain.resetOdometry(trajectory.getInitialPose());
-
- // Run path following command, then stop at the end.
- return ramseteCommand.andThen(() -> mDrivetrain.setVoltage(0, 0));
+     return new intakeAndAuto();
   }
 }
 
