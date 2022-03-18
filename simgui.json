@@ -15,7 +15,27 @@
       "/LiveWindow/Intake": "Subsystem",
       "/LiveWindow/Shooter": "Subsystem",
       "/LiveWindow/Ungrouped/ADXRS450_Gyro[0]": "Gyro",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler"
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "Robot": {
+          "style": "Box/Image",
+          "weight": 2.0,
+          "width": 0.4860000014305115
+        },
+        "bottom": 900,
+        "height": 8.229599952697754,
+        "image": "C:\\Users\\jtorgerson\\Downloads\\2022-field.png",
+        "left": 74,
+        "right": 1774,
+        "top": 50,
+        "width": 16.459199905395508,
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {

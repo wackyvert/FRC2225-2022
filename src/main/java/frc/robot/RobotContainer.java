@@ -69,7 +69,7 @@ public class RobotContainer {
     final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
     aButton1.whileHeld(new ShootBall(true), true);
     bButton1.whenPressed(new stopEverything());
-    yButton1.whileHeld(new AlignForwardAndSide());
+    yButton1.whileHeld(new AlignForwardAndSide(), true);
     xButton1.whileHeld(new frc.robot.commands.Intake());
 
 
@@ -81,7 +81,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand(Trajectory trajectory) {
-     return new intakeAndAuto();
+     return new ShootBall(false).andThen(new intakeAndAuto(trajectory).andThen(new AlignForwardAndSide().withTimeout(2).andThen(new ShootBall(true))));
   }
 }
 

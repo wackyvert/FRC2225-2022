@@ -106,6 +106,9 @@ public class AlignForwardAndSide extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(m_LimelightDriveCommand<0.05 && m_LimelightSteerCommand<0.05){
+      return true;
+    }
+    else return  false;
   }
 }

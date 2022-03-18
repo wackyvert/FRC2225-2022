@@ -60,6 +60,7 @@ public class Drivetrain extends SubsystemBase {
     }
     public void resetOdometry(Pose2d pose) {
       resetEncoders();
+      m_gyro.reset();
       m_odometry.resetPosition(pose, m_gyro.getRotation2d());
     }
     public void resetEncoders() {
