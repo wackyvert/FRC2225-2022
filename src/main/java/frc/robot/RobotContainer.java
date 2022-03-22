@@ -73,6 +73,7 @@ public class RobotContainer {
     xButton1.whileHeld(new frc.robot.commands.Intake());
 
 
+
   }
 
   /**
@@ -81,7 +82,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand(Trajectory trajectory) {
-     return new ShootBall(false).andThen(new intakeAndAuto(trajectory).andThen(new AlignForwardAndSide().withTimeout(2).andThen(new ShootBall(true))));
+     return new pathfollow(trajectory);
   }
 }
 

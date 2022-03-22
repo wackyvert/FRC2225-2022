@@ -39,7 +39,7 @@ Drivetrain mDrivetrain = RobotContainer.mDrivetrain;
           Constants.kvVoltSecondsPerMeter,
           Constants.kaVoltSecondsSquaredPerMeter),
       Constants.kDriveKinematics,
-      10);
+      5);
 
 // Create config for trajectory
 TrajectoryConfig config =
@@ -65,8 +65,8 @@ RamseteCommand ramseteCommand =
           Constants.kaVoltSecondsSquaredPerMeter),
       Constants.kDriveKinematics,
       mDrivetrain::getWheelSpeeds,
-      new PIDController(.2, 0, 0),
-      new PIDController(.2, 0, 0),
+      new PIDController(Constants.kPDriveVel, 0, 0),
+      new PIDController(Constants.kPDriveVel, 0, 0),
       mDrivetrain::setVoltage,
       mDrivetrain);
  trajectory.getStates();

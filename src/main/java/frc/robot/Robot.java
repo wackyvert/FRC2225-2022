@@ -33,6 +33,7 @@ import frc.robot.commands.feed;
  * project.
  */
 public class Robot extends TimedRobot {
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -96,7 +97,7 @@ public Trajectory trajectory = new Trajectory();
   @Override
   public void autonomousInit() {
     // Reset odometry to the starting pose of the trajectory.
-   RobotContainer.mDrivetrain.resetOdometry(trajectory.getInitialPose());
+   RobotContainer.mDrivetrain.resetOdometry(trajectory.getInitialPose(), -180);
    m_autonomousCommand = m_robotContainer.getAutonomousCommand(trajectory);
 
     // schedule the autonomous command (example)

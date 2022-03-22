@@ -58,10 +58,9 @@ public class Drivetrain extends SubsystemBase {
       frontRight.set(ControlMode.PercentOutput, speed-turn);
       backRight.follow(frontRight);
     }
-    public void resetOdometry(Pose2d pose) {
+    public void resetOdometry(Pose2d pose, double heading) {
       resetEncoders();
-      m_gyro.reset();
-      m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+      m_odometry.resetPosition(pose, Rotation2d.fromDegrees(heading));
     }
     public void resetEncoders() {
       leftEncoder.reset();
