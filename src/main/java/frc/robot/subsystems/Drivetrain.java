@@ -15,6 +15,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,11 +31,20 @@ public class Drivetrain extends SubsystemBase {
     TalonSRX backLeft = new TalonSRX (Constants.BackLeftCAN_ID);
     TalonSRX backRight = new TalonSRX(Constants.BackRightCAN_ID);
     Encoder leftEncoder = new Encoder(0,1);
+    EncoderSim leftEncoderSim = new EncoderSim(leftEncoder);
     Encoder rightEncoder = new Encoder(2,3);
+    EncoderSim rightEncoderSim = new EncoderSim(rightEncoder);
+    private DifferentialDrivetrainSim m_driveSim = DifferentialDrivetrainSim.createKitbotSim(
+  KitbotMotor.kDualCIMPerSide, // 2 CIMs per side.
+  KitbotGearing.k10p71,        // 10.71:1
+  KitbotWheelSize.SixInch,     // 6" diameter wheels.
+  null                         // No measurement noise.
+);
   double whd = .1524;
     double cpr = 360;
     private final ADXRS450_Gyro
      m_gyro = new ADXRS450_Gyro();
+     private ADXRS450_GyroSim gyroSim = new ADXRS450_GyroSim(m_gyro);
      private final Field2d m_field = new Field2d();
     public Drivetrain() {
       SmartDashboard.putData("Field", m_field);
@@ -105,5 +120,13 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+    m_driveSim.setInputs(frontLeft.getMotorOutputVoltage(), -frontRight.getMotorOutputVoltage());
+    m_driveSim.update(0.02);
+    leftEncoderSim .setDistance(m_driveSim.getLeftPositionMeters());
+    rightEncoderSim.setDistance(m_driveSim.getRightPositionMeters());
+    leftEncoderSim.setRate(m_driveSim.getLeftVelocityMetersPerSecond());
+    rightEncoderSim.setRate(m_driveSim.getRightVelocityMetersPerSecond());
+    gyroSim.setAngle(m_driveSim.getHeading().getDegrees());
+    
   }
 }
