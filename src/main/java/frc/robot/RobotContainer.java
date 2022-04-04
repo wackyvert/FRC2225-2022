@@ -7,6 +7,11 @@ package frc.robot;
 
 import java.util.List;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -39,11 +44,15 @@ public class RobotContainer {
   public static final Drivetrain mDrivetrain = new Drivetrain();
   public static final Shooter mShooter = new Shooter();
   public static final Intake mIntake = new Intake();
-  
+
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
+    SendableChooser<Command> commandSendableChooser= new SendableChooser<>();
+    SmartDashboard.putData(commandSendableChooser);
+    //commandSendableChooser.setDefaultOption("Blue 1",getAutonomousCommand(trajectory));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -81,8 +90,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand(Trajectory trajectory) {
-    var autoVoltageConstraint =
+  /*  var autoVoltageConstraint =
             new DifferentialDriveVoltageConstraint(
                     new SimpleMotorFeedforward(
                             Constants.ksVolts,
@@ -120,7 +130,8 @@ public class RobotContainer {
                     mDrivetrain::setVoltage,
                     mDrivetrain);
     trajectory.getStates();
-    return ramseteCommand.andThen(() -> mDrivetrain.setVoltage(0, 0));
+    return ramseteCommand.andThen(() -> mDrivetrain.setVoltage(0, 0));*/
+    return new pathfollow(trajectory).andThen(()->mDrivetrain.setVoltage(0,0));
   }
 }
 

@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.robot.Constants;
@@ -24,9 +25,10 @@ public class pathfollow extends CommandBase {
   public pathfollow(Trajectory trajectory) {
     this.trajectory=trajectory;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(mDrivetrain);
   }
 Trajectory trajectory;
-
+RamseteCommand ramseteCommand;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -39,20 +41,9 @@ Trajectory trajectory;
                     Constants.kDriveKinematics,
                     5);
 
-// Create config for trajectory
-    TrajectoryConfig config =
-            new TrajectoryConfig(
-                    Constants.kMaxSpeedMetersPerSecond,
-                    Constants.kMaxAccelerationMetersPerSecondSquared)
-                    // Add kinematics to ensure max speed is actually obeyed
-                    .setKinematics(Constants.kDriveKinematics)
-                    // Apply the voltage constraint
-                    .addConstraint(autoVoltageConstraint);
-
-// An example trajectory to follow.  All units in meters.
 
 
-    RamseteCommand ramseteCommand =
+    ramseteCommand =
             new RamseteCommand(
                     trajectory,
                     mDrivetrain::getPose,
@@ -68,23 +59,19 @@ Trajectory trajectory;
                     mDrivetrain::setVoltage,
                     mDrivetrain);
     trajectory.getStates();
-    ramseteCommand.andThen(() -> mDrivetrain.setVoltage(0, 0));
+
+
+  }
+  @Override
+  public void execute(){
+    ramseteCommand.schedule();
+
 
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() { 
-      // Create a voltage constraint to ensure we don't accelerate too fast
-  }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+
+
+
 }

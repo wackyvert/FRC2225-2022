@@ -18,12 +18,16 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.feed;
+import frc.robot.commands.pathfollow;
+import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Log;
 
 
 /**
@@ -43,13 +47,18 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
  //public static Encoder leftEncoder = new Encoder(0, 1);
- String trajectoryJSON = "pathplanner/generatedJSON/Test Path.wpilib.json";
+  @Log
+  SendableChooser<Command> commandSendableChooser;
+ String trajectoryJSON = "pathplanner/generatedJSON/New Path.wpilib.json";
 public Trajectory trajectory = new Trajectory();
   @Override
   public void robotInit() {
+
     CommandScheduler.getInstance().setDefaultCommand(RobotContainer.mDrivetrain, new ArcadeDrive());
     Field2d m_field = new Field2d();
     SmartDashboard.putData(m_field);
+    Logger.configureLoggingAndConfig(this, false);
+
     
     
     CameraServer.startAutomaticCapture();
@@ -63,7 +72,7 @@ public Trajectory trajectory = new Trajectory();
    m_robotContainer = new RobotContainer();
    // Push the trajectory to Field2d.
    m_field.getObject("traj").setTrajectory(trajectory);
-}
+   }
    
 
 
@@ -78,6 +87,7 @@ public Trajectory trajectory = new Trajectory();
    */
   @Override
   public void robotPeriodic() {
+    Logger.updateEntries();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic

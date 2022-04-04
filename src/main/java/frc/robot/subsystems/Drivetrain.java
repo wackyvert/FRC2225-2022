@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,12 +26,14 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSiz
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
+
 public class Drivetrain extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  TalonSRX frontLeft = new TalonSRX(Constants.FrontLeftCAN_ID);
-    TalonSRX frontRight = new TalonSRX (Constants.FrontRightCAN_ID);
-    TalonSRX backLeft = new TalonSRX (Constants.BackLeftCAN_ID);
-    TalonSRX backRight = new TalonSRX(Constants.BackRightCAN_ID);
+  WPI_TalonSRX frontLeft = new WPI_TalonSRX(Constants.FrontLeftCAN_ID);
+  WPI_TalonSRX frontRight = new WPI_TalonSRX (Constants.FrontRightCAN_ID);
+  WPI_TalonSRX backLeft = new WPI_TalonSRX (Constants.BackLeftCAN_ID);
+  WPI_TalonSRX backRight = new WPI_TalonSRX(Constants.BackRightCAN_ID);
     Encoder leftEncoder = new Encoder(0,1);
     EncoderSim leftEncoderSim = new EncoderSim(leftEncoder);
     Encoder rightEncoder = new Encoder(2,3);
@@ -50,6 +54,7 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putData("Field", m_field);
       leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
       rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
+
       m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     }
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -58,6 +63,7 @@ public class Drivetrain extends SubsystemBase {
     public double getHeading() {
       return m_gyro.getRotation2d().getDegrees();
     }
+    @Log
     private final DifferentialDriveOdometry m_odometry;
     public void stop (){
       frontLeft.set(ControlMode.PercentOutput, 0);
@@ -117,7 +123,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    m_driveSim.setInputs(frontLeft.getMotorOutputVoltage(), frontRight.getMotorOutputVoltage());
+    m_driveSim.setInputs(frontLeft.getMotorOutputVoltage()* RobotController.getInputVoltage(), frontRight.getMotorOutputVoltage()*RobotController.getInputVoltage());
     m_driveSim.update(0.02);
     leftEncoderSim .setDistance(m_driveSim.getLeftPositionMeters());
     rightEncoderSim.setDistance(m_driveSim.getRightPositionMeters());
