@@ -85,14 +85,10 @@ public class Drivetrain extends SubsystemBase {
 
     }
     public void setVoltage(double left, double right){
-      left=left/12;
-      right=right/12;
-      frontLeft.setNeutralMode(NeutralMode.Coast);
-      frontRight.setNeutralMode(NeutralMode.Coast);
-     backLeft.set(ControlMode.PercentOutput, left);
-     backRight.set(ControlMode.PercentOutput, right);
-     frontLeft.set(ControlMode.PercentOutput, left);
-      frontRight.set(ControlMode.PercentOutput, right);
+     backLeft.set(ControlMode.PercentOutput, left/12);
+     backRight.set(ControlMode.PercentOutput, right/12);
+     frontLeft.set(ControlMode.PercentOutput, left/12);
+      frontRight.set(ControlMode.PercentOutput, right/12);
     }
   public void arcadeDrive (){
     
@@ -105,12 +101,13 @@ public class Drivetrain extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    m_field.setRobotPose(m_odometry.getPoseMeters());
+    m_odometry.update(
+            m_gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+      m_field.setRobotPose(m_odometry.getPoseMeters());
     SmartDashboard.putNumber("gyro", m_gyro.getAngle());
     
     
-    m_odometry.update(
-      m_gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+
 }
     // This method will be called once per scheduler run
   
@@ -120,13 +117,14 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    m_driveSim.setInputs(frontLeft.getMotorOutputVoltage(), -frontRight.getMotorOutputVoltage());
+    m_driveSim.setInputs(frontLeft.getMotorOutputVoltage(), frontRight.getMotorOutputVoltage());
     m_driveSim.update(0.02);
     leftEncoderSim .setDistance(m_driveSim.getLeftPositionMeters());
     rightEncoderSim.setDistance(m_driveSim.getRightPositionMeters());
     leftEncoderSim.setRate(m_driveSim.getLeftVelocityMetersPerSecond());
     rightEncoderSim.setRate(m_driveSim.getRightVelocityMetersPerSecond());
     gyroSim.setAngle(m_driveSim.getHeading().getDegrees());
+
     
   }
 }

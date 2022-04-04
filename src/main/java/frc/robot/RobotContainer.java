@@ -82,7 +82,45 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand(Trajectory trajectory) {
-     return new pathfollow(trajectory);
+    var autoVoltageConstraint =
+            new DifferentialDriveVoltageConstraint(
+                    new SimpleMotorFeedforward(
+                            Constants.ksVolts,
+                            Constants.kvVoltSecondsPerMeter,
+                            Constants.kaVoltSecondsSquaredPerMeter),
+                    Constants.kDriveKinematics,
+                    5);
+
+// Create config for trajectory
+    TrajectoryConfig config =
+            new TrajectoryConfig(
+                    Constants.kMaxSpeedMetersPerSecond,
+                    Constants.kMaxAccelerationMetersPerSecondSquared)
+                    // Add kinematics to ensure max speed is actually obeyed
+                    .setKinematics(Constants.kDriveKinematics)
+                    // Apply the voltage constraint
+                    .addConstraint(autoVoltageConstraint);
+
+// An example trajectory to follow.  All units in meters.
+
+
+    RamseteCommand ramseteCommand =
+            new RamseteCommand(
+                    trajectory,
+                    mDrivetrain::getPose,
+                    new RamseteController(),
+                    new SimpleMotorFeedforward(
+                            Constants.ksVolts,
+                            Constants.kvVoltSecondsPerMeter,
+                            Constants.kaVoltSecondsSquaredPerMeter),
+                    Constants.kDriveKinematics,
+                    mDrivetrain::getWheelSpeeds,
+                    new PIDController(Constants.kPDriveVel, 0, 0),
+                    new PIDController(Constants.kPDriveVel, 0, 0),
+                    mDrivetrain::setVoltage,
+                    mDrivetrain);
+    trajectory.getStates();
+    return ramseteCommand.andThen(() -> mDrivetrain.setVoltage(0, 0));
   }
 }
 

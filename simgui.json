@@ -8654,20 +8654,46 @@
       },
       "/SmartDashboard/Field": {
         "Robot": {
+          "arrowSize": 32,
           "style": "Box/Image",
-          "weight": 2.0,
+          "weight": 0.009999999776482582,
           "width": 0.4860000014305115
         },
         "bottom": 900,
         "height": 8.229599952697754,
+        "image": "C:\\Users\\jtorgerson\\Downloads\\2022-field.png",
         "left": 74,
         "right": 1774,
         "top": 50,
+        "traj": {
+          "arrowSize": 3,
+          "arrows": false,
+          "color": [
+            0.8284313678741455,
+            0.7025423049926758,
+            0.7025423049926758,
+            255.0
+          ],
+          "length": 0.009999999776482582,
+          "weight": 0.009999999776482582,
+          "width": 0.009999999776482582
+        },
         "width": 16.459199905395508,
         "window": {
           "visible": true
         }
       }
+    }
+  },
+  "NetworkTables": {
+    "LiveWindow": {
+      "Drivetrain": {
+        "open": true
+      },
+      "open": true
+    },
+    "SmartDashboard": {
+      "open": true
     }
   }
 }

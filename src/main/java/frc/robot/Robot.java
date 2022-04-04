@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
  //public static Encoder leftEncoder = new Encoder(0, 1);
- String trajectoryJSON = "paths/3Ball.wpilib.json";
+ String trajectoryJSON = "pathplanner/generatedJSON/Test Path.wpilib.json";
 public Trajectory trajectory = new Trajectory();
   @Override
   public void robotInit() {
