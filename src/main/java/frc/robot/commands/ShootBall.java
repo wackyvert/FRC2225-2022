@@ -23,7 +23,7 @@ public class ShootBall extends CommandBase {
   @Override
   public void execute() {
     if(high){
-    RobotContainer.mShooter.shootBall(9500);
+    RobotContainer.mShooter.shootBall(10500);
     }
     else
     {RobotContainer.mShooter.shootBall(7600);}

@@ -47,7 +47,7 @@ public class AlignForwardAndSide extends CommandBase {
     {
       m_LimelightHasValidTarget = false;
       m_LimelightDriveCommand = 0.0;
-      m_LimelightSteerCommand = 0.3;
+      m_LimelightSteerCommand = 0.0;
       return;
     }
 

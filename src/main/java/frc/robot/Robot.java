@@ -57,7 +57,7 @@ public Trajectory trajectory = new Trajectory();
     CommandScheduler.getInstance().setDefaultCommand(RobotContainer.mDrivetrain, new ArcadeDrive());
     Field2d m_field = new Field2d();
     SmartDashboard.putData(m_field);
-    Logger.configureLoggingAndConfig(this, false);
+
 
     
     
@@ -72,6 +72,7 @@ public Trajectory trajectory = new Trajectory();
    m_robotContainer = new RobotContainer();
    // Push the trajectory to Field2d.
    m_field.getObject("traj").setTrajectory(trajectory);
+    Logger.configureLoggingAndConfig(m_robotContainer, false);
    }
    
 

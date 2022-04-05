@@ -100,10 +100,10 @@ public class Drivetrain extends SubsystemBase {
     
     frontLeft.setNeutralMode(NeutralMode.Coast);
     frontRight.setNeutralMode(NeutralMode.Coast);
-    frontLeft.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
-    backLeft.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
-    frontRight.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
-    backRight.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
+    frontLeft.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
+    backLeft.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
+    frontRight.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()-OperatorInput.getTurnVal());
+    backRight.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()-OperatorInput.getTurnVal());
   }
   @Override
   public void periodic() {

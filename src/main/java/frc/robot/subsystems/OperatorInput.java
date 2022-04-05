@@ -25,7 +25,7 @@ public class OperatorInput extends SubsystemBase {
   }
   //gets the speed val to drive the robot at (based on the triggers on the primary controller)
   public static double getSpeedVal() {
-    return ScaleInputs.scaleInputs(-controller1.getRawAxis(2) + controller1.getRawAxis((3)));
+    return ScaleInputs.scaleInputs(controller1.getRightTriggerAxis()-controller1.getLeftTriggerAxis());
   }
   //gets the turtn val to drive the robot at (based on the right joystick on the primary controller)
   public static double getTurnVal() {

@@ -9,7 +9,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.BangBangController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -18,10 +21,12 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     shooter.setInverted(true);
     feeder.setInverted(true);
+    rpmController.setTolerance(100);
     
   }
-  BangBangController rpmController = new BangBangController();
-  TalonFX shooter = new TalonFX(Constants.shooterCanID);
+  SimpleMotorFeedforward ffController = new SimpleMotorFeedforward(0, 0, 0);
+  PIDController rpmController = new PIDController(.3, 0, 0);
+  WPI_TalonFX shooter = new WPI_TalonFX(Constants.shooterCanID);
   VictorSPX feeder = new VictorSPX(Constants.feederID);
   public void end(){
     shooter.set(ControlMode.PercentOutput, 0);
@@ -37,13 +42,13 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public void shootBall(int rpm){
-    shooter.set(ControlMode.PercentOutput, rpmController.calculate(ShooterRPM, rpm));
-    if(rpmController.atSetpoint()){
-      feedBall();
+    shooter.setVoltage(rpmController.calculate(ShooterRPM, rpm)+ffController.calculate(rpm));
+    if(rpmController.atSetpoint())
+    {    feedBall();}
     }
     
     
-  }
+
     public void feedBall(){
     feeder.set(ControlMode.PercentOutput, .7);
   }
