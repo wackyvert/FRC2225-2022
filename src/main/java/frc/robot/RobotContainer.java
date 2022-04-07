@@ -146,7 +146,8 @@ public class RobotContainer {
                     mDrivetrain::setVoltage,
                     mDrivetrain);
     trajectory.getStates();
-    return new SequentialCommandGroup(new ParallelRaceGroup(ramseteCommand, new IntakeAuto()), new stopEverything(), new AimAndDistance(), new ShootBall(true));
+    //return new SequentialCommandGroup(new ParallelRaceGroup(ramseteCommand, new IntakeAuto()), new stopEverything(), new AimAndDistance(), new ShootBall(true));
+return new ShootBall(true);
   }
 }
 

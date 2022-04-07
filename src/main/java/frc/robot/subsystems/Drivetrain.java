@@ -31,14 +31,16 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
+  double leftEnc;
+  double rightEnc;
   WPI_TalonSRX frontLeft = new WPI_TalonSRX(Constants.FrontLeftCAN_ID);
   WPI_TalonSRX frontRight = new WPI_TalonSRX (Constants.FrontRightCAN_ID);
   WPI_TalonSRX backLeft = new WPI_TalonSRX (Constants.BackLeftCAN_ID);
   WPI_TalonSRX backRight = new WPI_TalonSRX(Constants.BackRightCAN_ID);
-    Encoder leftEncoder = new Encoder(0,1);
-    EncoderSim leftEncoderSim = new EncoderSim(leftEncoder);
-    Encoder rightEncoder = new Encoder(2,3);
-    EncoderSim rightEncoderSim = new EncoderSim(rightEncoder);
+    //Encoder leftEncoder = new Encoder(0,1);
+   // EncoderSim leftEncoderSim = new EncoderSim(leftEncoder);
+   // Encoder rightEncoder = new Encoder(2,3);
+  //  EncoderSim rightEncoderSim = new EncoderSim(rightEncoder);
     private DifferentialDrivetrainSim m_driveSim = DifferentialDrivetrainSim.createKitbotSim(
   KitbotMotor.kDualCIMPerSide, // 2 CIMs per side.
   KitbotGearing.k10p71,        // 10.71:1
@@ -51,16 +53,25 @@ public class Drivetrain extends SubsystemBase {
      m_gyro = new ADXRS450_Gyro();
      private ADXRS450_GyroSim gyroSim;
      private final Field2d m_field = new Field2d();
-    public Drivetrain() {
-      if (RobotBase.isSimulation()){gyroSim = new ADXRS450_GyroSim(m_gyro);}
+    public double ticksToMeter(double encoder){
+
+      return (double) (encoder)* ((whd*Math.PI)/(4096));
+
+  }
+     public Drivetrain() {
+      if (RobotBase.isSimulation()){
+        gyroSim = new ADXRS450_GyroSim(m_gyro);
+      }
+      frontRight.setInverted(true);
+      backRight.setInverted(true);
       SmartDashboard.putData("Field", m_field);
-      leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
-      rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
+      //leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
+      //rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
 
       m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     }
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-      return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
+      return new DifferentialDriveWheelSpeeds(ticksToMeter(frontLeft.getSelectedSensorPosition()), ticksToMeter(frontRight.getSelectedSensorPosition()));
     }
     public double getHeading() {
       return m_gyro.getRotation2d().getDegrees();
@@ -76,9 +87,9 @@ public class Drivetrain extends SubsystemBase {
     public void visionVoltage(double speed, double turn){
       frontLeft.setNeutralMode(NeutralMode.Coast);
       frontRight.setNeutralMode(NeutralMode.Coast);
-      frontLeft.set(ControlMode.PercentOutput, speed+turn);
+      frontLeft.set(ControlMode.PercentOutput, speed-turn);
       backLeft.follow(frontLeft);
-      frontRight.set(ControlMode.PercentOutput, speed-turn);
+      frontRight.set(ControlMode.PercentOutput, speed+turn);
       backRight.follow(frontRight);
     }
     public void resetOdometry(Pose2d pose, double heading) {
@@ -86,8 +97,8 @@ public class Drivetrain extends SubsystemBase {
       m_odometry.resetPosition(pose, Rotation2d.fromDegrees(heading));
     }
     public void resetEncoders() {
-      leftEncoder.reset();
-      rightEncoder.reset();
+      frontLeft.setSelectedSensorPosition(0);
+      frontRight.setSelectedSensorPosition(0);
       
      
 
@@ -102,15 +113,18 @@ public class Drivetrain extends SubsystemBase {
     
     frontLeft.setNeutralMode(NeutralMode.Coast);
     frontRight.setNeutralMode(NeutralMode.Coast);
-    frontLeft.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
-    backLeft.set(ControlMode.PercentOutput, -OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
+    backLeft.setNeutralMode(NeutralMode.Coast);
+    backRight.setNeutralMode(NeutralMode.Coast);
+    frontLeft.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
+    backLeft.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()+OperatorInput.getTurnVal());
     frontRight.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()-OperatorInput.getTurnVal());
     backRight.set(ControlMode.PercentOutput, OperatorInput.getSpeedVal()-OperatorInput.getTurnVal());
   }
   @Override
   public void periodic() {
+
     m_odometry.update(
-            m_gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+            m_gyro.getRotation2d(), ticksToMeter(frontLeft.getSelectedSensorPosition()), ticksToMeter(frontRight.getSelectedSensorPosition()));
       m_field.setRobotPose(m_odometry.getPoseMeters());
     SmartDashboard.putNumber("gyro", m_gyro.getAngle());
     
@@ -127,10 +141,10 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
     m_driveSim.setInputs(frontLeft.getMotorOutputVoltage()* RobotController.getInputVoltage(), frontRight.getMotorOutputVoltage()*RobotController.getInputVoltage());
     m_driveSim.update(0.02);
-    leftEncoderSim .setDistance(m_driveSim.getLeftPositionMeters());
-    rightEncoderSim.setDistance(m_driveSim.getRightPositionMeters());
-    leftEncoderSim.setRate(m_driveSim.getLeftVelocityMetersPerSecond());
-    rightEncoderSim.setRate(m_driveSim.getRightVelocityMetersPerSecond());
+   // leftEncoderSim .setDistance(m_driveSim.getLeftPositionMeters());
+    //rightEncoderSim.setDistance(m_driveSim.getRightPositionMeters());
+    //leftEncoderSim.setRate(m_driveSim.getLeftVelocityMetersPerSecond());
+    //rightEncoderSim.setRate(m_driveSim.getRightVelocityMetersPerSecond());
     gyroSim.setAngle(m_driveSim.getHeading().getDegrees());
 
     

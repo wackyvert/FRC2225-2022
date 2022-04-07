@@ -56,6 +56,8 @@ public Trajectory blueHangar = new Trajectory();
     public Trajectory redWall = new Trajectory();
   public  Trajectory trajectory = new Trajectory();
   Field2d m_field = new Field2d();
+  Encoder leftenc = new Encoder(0,1);
+
   @Override
   public void robotInit() {
 

@@ -15,11 +15,11 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static int FrontLeftCAN_ID = 3;
-    public static int FrontRightCAN_ID = 12;
+    public static int FrontLeftCAN_ID = 01;
+    public static int FrontRightCAN_ID = 03;
     public static int feederID = 13;
-    public static int BackLeftCAN_ID = 2;
-    public static int BackRightCAN_ID = 1;
+    public static int BackLeftCAN_ID = 12;
+    public static int BackRightCAN_ID = 02;
     public static int shooterCanID = 0;
     public static int intakeCanID = 8;
     public static int Driver1ID = 0;
