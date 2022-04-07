@@ -25,6 +25,16 @@
         "header": {
           "open": true
         }
+      },
+      "Talon SRX[12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[3]/Analog In": {
+        "header": {
+          "open": true
+        }
       }
     },
     "RoboRIO": {
@@ -8645,6 +8655,7 @@
       "/LiveWindow/Ungrouped/PIDController[99]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[9]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/Talon FX [0]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [12]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [1]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [2]": "Motor Controller",
@@ -8667,7 +8678,7 @@
         },
         "bottom": 900,
         "height": 8.229599952697754,
-        "image": "C:\\Users\\jtorgerson\\Downloads\\2022-field.png",
+        "image": "C:\\Users\\Jake\\Desktop\\2022-field.png",
         "left": 74,
         "right": 1774,
         "top": 50,
@@ -8694,6 +8705,9 @@
   "NetworkTables": {
     "LiveWindow": {
       "Drivetrain": {
+        "open": true
+      },
+      "Intake": {
         "open": true
       },
       "open": true

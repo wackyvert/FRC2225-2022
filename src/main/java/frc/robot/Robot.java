@@ -11,6 +11,7 @@ import java.nio.file.Path;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CameraServerCvJNI;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,11 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.ShootBall;
-import frc.robot.commands.feed;
-import frc.robot.commands.pathfollow;
+import frc.robot.commands.*;
 import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 
@@ -47,15 +46,21 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
  //public static Encoder leftEncoder = new Encoder(0, 1);
-  @Log
-  SendableChooser<Command> commandSendableChooser;
- String trajectoryJSON = "pathplanner/generatedJSON/New Path.wpilib.json";
-public Trajectory trajectory = new Trajectory();
+
+  SendableChooser<Trajectory> commandSendableChooser;
+public Trajectory blueHangar = new Trajectory();
+  public Trajectory blueMiddle = new Trajectory();
+  public Trajectory blueWall = new Trajectory();
+    public Trajectory redHangar = new Trajectory();
+    public Trajectory redMiddle = new Trajectory();
+    public Trajectory redWall = new Trajectory();
+  public  Trajectory trajectory = new Trajectory();
+  Field2d m_field = new Field2d();
   @Override
   public void robotInit() {
 
     CommandScheduler.getInstance().setDefaultCommand(RobotContainer.mDrivetrain, new ArcadeDrive());
-    Field2d m_field = new Field2d();
+
     SmartDashboard.putData(m_field);
 
 
@@ -63,17 +68,39 @@ public Trajectory trajectory = new Trajectory();
     
     CameraServer.startAutomaticCapture();
     try {
-      
-    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+
+    Path hangarPath = Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/2BallBlueHangar.wpilib.json");
+      Path middlePath = Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/2BallBlueMiddle.wpilib.json");
+      Path wallPath = Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/2BallBlueWall.wpilib.json");
+      Path redhangarPath = Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/2BallRedHangar.wpilib.json");
+      Path redmiddlePath = Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/2BallRedMiddle.wpilib.json");
+      Path redwallPath = Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/2BallRedWall.wpilib.json");
+
+      blueHangar = TrajectoryUtil.fromPathweaverJson(hangarPath);
+      blueMiddle = TrajectoryUtil.fromPathweaverJson(middlePath);
+      blueWall = TrajectoryUtil.fromPathweaverJson(wallPath);
+        redHangar = TrajectoryUtil.fromPathweaverJson(redhangarPath);
+        redMiddle = TrajectoryUtil.fromPathweaverJson(redmiddlePath);
+       redWall = TrajectoryUtil.fromPathweaverJson(redwallPath);
+
+      trajectory=blueHangar;
    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+      DriverStation.reportError("Error loading traj", ex.getStackTrace());
    }
+
    m_robotContainer = new RobotContainer();
    // Push the trajectory to Field2d.
-   m_field.getObject("traj").setTrajectory(trajectory);
+
     Logger.configureLoggingAndConfig(m_robotContainer, false);
-   }
+    commandSendableChooser= new SendableChooser<>();
+    SmartDashboard.putData(commandSendableChooser);
+    commandSendableChooser.setDefaultOption("Blue Hangar",blueHangar);
+      commandSendableChooser.addOption("Blue Middle", blueMiddle);
+      commandSendableChooser.addOption("Blue Wall",blueWall);
+      commandSendableChooser.addOption("Red Hangar",redHangar);
+      commandSendableChooser.addOption("Red Middle", redMiddle);
+      commandSendableChooser.addOption("Red Wall", redWall);
+  }
    
 
 
@@ -96,7 +123,11 @@ public Trajectory trajectory = new Trajectory();
     CommandScheduler.getInstance().run();
     //SmartDashboard.putNumber("Encoder", leftEncoder.getDistance());
   }
-
+@Config
+public void setHeading(double value){
+    heading=value;
+}
+public double heading;
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}
@@ -107,22 +138,28 @@ public Trajectory trajectory = new Trajectory();
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    trajectory=commandSendableChooser.getSelected();
     // Reset odometry to the starting pose of the trajectory.
-   RobotContainer.mDrivetrain.resetOdometry(trajectory.getInitialPose(), -180);
+   RobotContainer.mDrivetrain.resetOdometry(trajectory.getInitialPose(), trajectory.getInitialPose().getRotation().getDegrees());
    m_autonomousCommand = m_robotContainer.getAutonomousCommand(trajectory);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    m_field.getObject("traj").setTrajectory(trajectory);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+  }
 
   @Override
   public void teleopInit() {
+
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

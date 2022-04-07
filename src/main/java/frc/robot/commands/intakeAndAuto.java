@@ -6,16 +6,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class intakeAndAuto extends ParallelCommandGroup {
+public class intakeAndAuto extends ParallelRaceGroup{
   /** Creates a new intakeAndAuto. */
   public intakeAndAuto(Trajectory trajectory) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Intake(), new pathfollow(trajectory));
+    addCommands(new pathfollow(trajectory), new ShootBall(true));
   }
 }

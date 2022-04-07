@@ -9,8 +9,7 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.LimelightSubsystem;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.controller.PIDController;
@@ -30,8 +29,6 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -52,9 +49,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    SendableChooser<Command> commandSendableChooser= new SendableChooser<>();
-    SmartDashboard.putData(commandSendableChooser);
-    //commandSendableChooser.setDefaultOption("Blue 1",getAutonomousCommand(trajectory));
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -81,8 +76,9 @@ public class RobotContainer {
     final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
     aButton1.whileHeld(new ShootBall(true), true);
     bButton1.whenPressed(new stopEverything());
-    yButton1.whileHeld(new AlignForwardAndSide(), true);
+    yButton1.whileHeld(new AimAndDistance(), true);
     xButton1.whileHeld(new frc.robot.commands.Intake());
+    rightBumperButton.whileHeld(new feed());
 
 
 
@@ -134,7 +130,23 @@ public class RobotContainer {
                     mDrivetrain);
     trajectory.getStates();
     return ramseteCommand.andThen(() -> mDrivetrain.setVoltage(0, 0));*/
-    return new pathfollow(trajectory).andThen(()->mDrivetrain.setVoltage(0,0));
+    RamseteCommand ramseteCommand =
+            new RamseteCommand(
+                    trajectory,
+                    mDrivetrain::getPose,
+                    new RamseteController(),
+                    new SimpleMotorFeedforward(
+                            Constants.ksVolts,
+                            Constants.kvVoltSecondsPerMeter,
+                            Constants.kaVoltSecondsSquaredPerMeter),
+                    Constants.kDriveKinematics,
+                    mDrivetrain::getWheelSpeeds,
+                    new PIDController(Constants.kPDriveVel, 0, 0),
+                    new PIDController(Constants.kPDriveVel, 0, 0),
+                    mDrivetrain::setVoltage,
+                    mDrivetrain);
+    trajectory.getStates();
+    return new SequentialCommandGroup(new ParallelRaceGroup(ramseteCommand, new IntakeAuto()), new stopEverything(), new AimAndDistance(), new ShootBall(true));
   }
 }
 

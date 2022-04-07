@@ -22,6 +22,7 @@ public class ShootBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Shooter Spinning up");
     if(high){
     RobotContainer.mShooter.shootBall(10500);
     }

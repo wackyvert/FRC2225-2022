@@ -65,8 +65,10 @@ RamseteCommand ramseteCommand;
   @Override
   public void execute(){
     ramseteCommand.schedule();
+  }
 
-
+  public void end (boolean interrupted){
+    mDrivetrain.setVoltage(0,0);
   }
 
 
