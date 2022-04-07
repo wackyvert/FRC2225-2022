@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -48,9 +49,10 @@ public class Drivetrain extends SubsystemBase {
     double cpr = 360;
     private final ADXRS450_Gyro
      m_gyro = new ADXRS450_Gyro();
-     private ADXRS450_GyroSim gyroSim = new ADXRS450_GyroSim(m_gyro);
+     private ADXRS450_GyroSim gyroSim;
      private final Field2d m_field = new Field2d();
     public Drivetrain() {
+      if (RobotBase.isSimulation()){gyroSim = new ADXRS450_GyroSim(m_gyro);}
       SmartDashboard.putData("Field", m_field);
       leftEncoder.setDistancePerPulse(Math.PI*whd/cpr);
       rightEncoder.setDistancePerPulse(Math.PI*whd/cpr);
