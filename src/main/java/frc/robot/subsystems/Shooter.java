@@ -26,8 +26,8 @@ public class Shooter extends SubsystemBase {
     rpmController.setTolerance(100);
     
   }
-
-  PIDController rpmController = new PIDController(.1, 0, 0);
+  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.65491, 0.10774,0.028728 );
+  PIDController rpmController = new PIDController(0.0001124, 0, 0);
   WPI_TalonFX shooter = new WPI_TalonFX(Constants.shooterCanID);
   VictorSPX feeder = new VictorSPX(Constants.feederID);
   public void end(){
@@ -45,7 +45,7 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public void shootBall(int rpm) {
-    shooter.set(ControlMode.PercentOutput, .7);
+    shooter.set(rpmController.calculate(ShooterRPM, rpm));
   }
     
 

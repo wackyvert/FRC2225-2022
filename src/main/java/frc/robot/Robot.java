@@ -61,7 +61,6 @@ public Trajectory blueHangar = new Trajectory();
   @Override
   public void robotInit() {
 
-    CommandScheduler.getInstance().setDefaultCommand(RobotContainer.mDrivetrain, new ArcadeDrive());
 
     SmartDashboard.putData(m_field);
 
@@ -140,9 +139,9 @@ public double heading;
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    CommandScheduler.getInstance().cancelAll();
     trajectory=commandSendableChooser.getSelected();
     // Reset odometry to the starting pose of the trajectory.
-   RobotContainer.mDrivetrain.resetOdometry(trajectory.getInitialPose(), trajectory.getInitialPose().getRotation().getDegrees());
    m_autonomousCommand = m_robotContainer.getAutonomousCommand(trajectory);
 
     // schedule the autonomous command (example)
@@ -161,6 +160,7 @@ public double heading;
   @Override
   public void teleopInit() {
 
+    CommandScheduler.getInstance().setDefaultCommand(RobotContainer.mDrivetrain, new ArcadeDrive());
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

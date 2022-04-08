@@ -9,12 +9,12 @@ import frc.robot.RobotContainer;
 
 public class ShootBall extends CommandBase {
   /** Creates a new ShootBall. */
-  public ShootBall(boolean high) {
+  public ShootBall(int rpm) {
     addRequirements(RobotContainer.mShooter);
     // Use addRequirements() here to declare subsystem dependencies.
-    this.high=high;
+    this.rpm=rpm;
   }
-  boolean high;
+ int rpm;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -22,13 +22,7 @@ public class ShootBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Shooter Spinning up");
-    if(high){
-    RobotContainer.mShooter.shootBall(10500);
-    }
-    else
-    {RobotContainer.mShooter.shootBall(7600);}
-    
+   RobotContainer.mShooter.shootBall(rpm);
   }
 
   // Called once the command ends or is interrupted.

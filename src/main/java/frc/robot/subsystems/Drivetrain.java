@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
@@ -58,10 +59,12 @@ public class Drivetrain extends SubsystemBase {
       return (double) (encoder)* ((whd*Math.PI)/(4096));
 
   }
+  PIDController pid = new PIDController(0.4, 0, 0);
      public Drivetrain() {
       if (RobotBase.isSimulation()){
         gyroSim = new ADXRS450_GyroSim(m_gyro);
       }
+
       frontRight.setInverted(true);
       backRight.setInverted(true);
       SmartDashboard.putData("Field", m_field);
@@ -103,6 +106,15 @@ public class Drivetrain extends SubsystemBase {
      
 
     }
+
+    public void driveBack(boolean done){
+
+      setVoltage(pid.calculate(frontLeft.getSelectedSensorPosition(), 35000), pid.calculate(frontLeft.getSelectedSensorPosition(), 35000));
+      if(Math.abs((int) pid.getPositionError())<1000){
+        done=true;
+      }
+      else{done=false;}
+    }
     public void setVoltage(double left, double right){
      backLeft.set(ControlMode.PercentOutput, left/12);
      backRight.set(ControlMode.PercentOutput, right/12);
@@ -122,6 +134,7 @@ public class Drivetrain extends SubsystemBase {
   }
   @Override
   public void periodic() {
+      SmartDashboard.putNumber("encoder", frontLeft.getSelectedSensorPosition());
 
     m_odometry.update(
             m_gyro.getRotation2d(), ticksToMeter(frontLeft.getSelectedSensorPosition()), ticksToMeter(frontRight.getSelectedSensorPosition()));
@@ -132,7 +145,9 @@ public class Drivetrain extends SubsystemBase {
 
 }
     // This method will be called once per scheduler run
-  
+  public void driveBackwards(){
+
+  }
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }

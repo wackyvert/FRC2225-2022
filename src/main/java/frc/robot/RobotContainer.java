@@ -74,8 +74,8 @@ public class RobotContainer {
     final JoystickButton startButton = new JoystickButton(controller1, 8);
     final JoystickButton rightJoystickButton = new JoystickButton(controller1, 9);
     final JoystickButton leftJoystickButton = new JoystickButton(controller1, 10);
-    aButton1.whileHeld(new ShootBall(true), true);
-    bButton1.whenPressed(new stopEverything());
+    aButton1.whileHeld(new ShootBall(15000), true);
+    bButton1.whenPressed(new ShootBall(8500));
     yButton1.whileHeld(new AimAndDistance(), true);
     xButton1.whileHeld(new frc.robot.commands.Intake());
     rightBumperButton.whileHeld(new feed());
@@ -147,7 +147,7 @@ public class RobotContainer {
                     mDrivetrain);
     trajectory.getStates();
     //return new SequentialCommandGroup(new ParallelRaceGroup(ramseteCommand, new IntakeAuto()), new stopEverything(), new AimAndDistance(), new ShootBall(true));
-return new ShootBall(true);
+return new SequentialCommandGroup(new ParallelRaceGroup(new driveback(), new WaitCommand(2.1)), new stopEverything(), new ParallelCommandGroup(new ShootBall(15500).withTimeout(5), new WaitCommand(2).andThen(new feed()))).andThen(new stopEverything());
   }
 }
 

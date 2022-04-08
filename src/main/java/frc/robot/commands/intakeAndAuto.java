@@ -18,6 +18,6 @@ public class intakeAndAuto extends ParallelRaceGroup{
   public intakeAndAuto(Trajectory trajectory) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new pathfollow(trajectory), new ShootBall(true));
+    addCommands(new pathfollow(trajectory), new ShootBall(9000));
   }
 }
