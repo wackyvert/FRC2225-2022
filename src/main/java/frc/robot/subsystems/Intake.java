@@ -13,6 +13,10 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   VictorSPX intake = new VictorSPX(Constants.intakeCanID);
+  public void spinIntakeReverse(){
+    intake.set(ControlMode.PercentOutput, -.85);
+  }
+
   public Intake() {}
   public void spinIntake(){
     intake.set(ControlMode.PercentOutput, .85);

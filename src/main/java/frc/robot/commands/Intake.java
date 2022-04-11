@@ -21,7 +21,7 @@ public class Intake extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.mIntake.spinIntake();
-    System.out.println("Intake Spinning");
+
   }
 
   // Called once the command ends or is interrupted.

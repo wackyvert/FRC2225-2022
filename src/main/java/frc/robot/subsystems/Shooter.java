@@ -32,6 +32,7 @@ public class Shooter extends SubsystemBase {
   VictorSPX feeder = new VictorSPX(Constants.feederID);
   public void end(){
     shooter.set(ControlMode.PercentOutput, 0);
+    feeder.set(ControlMode.PercentOutput, 0);
     
   }
   public void endFeed(){

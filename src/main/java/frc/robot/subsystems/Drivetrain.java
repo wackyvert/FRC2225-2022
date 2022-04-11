@@ -120,6 +120,8 @@ public class Drivetrain extends SubsystemBase {
      backRight.set(ControlMode.PercentOutput, right/12);
      frontLeft.set(ControlMode.PercentOutput, left/12);
       frontRight.set(ControlMode.PercentOutput, right/12);
+      frontLeft.setNeutralMode(NeutralMode.Brake);
+      frontRight.setNeutralMode(NeutralMode.Brake);
     }
   public void arcadeDrive (){
     
